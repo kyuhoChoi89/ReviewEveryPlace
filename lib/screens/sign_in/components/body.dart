@@ -40,7 +40,7 @@ class Body extends StatelessWidget {
                       press: () {},
                     ),
                     SocalCard(
-                      icon: "assets/icons/facebook-2.svg",
+                      icon: "assets/icons/line-icon.svg",
                       press: () {},
                     ),
                     SocalCard(
