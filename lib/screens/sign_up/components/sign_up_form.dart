@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:shop_app/components/custom_surfix_icon.dart';
 import 'package:shop_app/components/default_button.dart';
 import 'package:shop_app/components/form_error.dart';
-import 'package:shop_app/screens/complete_profile/complete_profile_screen.dart';
+import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
 
+import '../../../components/google_button.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
-
 
 class SignUpForm extends StatefulWidget {
   @override
@@ -18,6 +18,8 @@ class _SignUpFormState extends State<SignUpForm> {
   String email;
   String password;
   String conform_password;
+  String name;
+  int age;
   bool remember = false;
   final List<String> errors = [];
 
@@ -46,15 +48,30 @@ class _SignUpFormState extends State<SignUpForm> {
           buildPasswordFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
           buildConformPassFormField(),
+          SizedBox(height: getProportionateScreenHeight(30)),
+          buildNameFormField(),
+          SizedBox(height: getProportionateScreenHeight(30)),
+          buildAgeFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
-            text: "Continue",
+            text: "Sing Up",
             press: () {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
                 // if all are valid then go to success screen
-                Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                Navigator.pushNamed(context, SignInScreen.routeName);
+              }
+            },
+          ),
+          SizedBox(height: getProportionateScreenHeight(30)),
+          GoogleButton(
+            text: "Sing Up with Google",
+            press: () {
+              if (_formKey.currentState.validate()) {
+                _formKey.currentState.save();
+                // if all are valid then go to success screen
+                Navigator.pushNamed(context, SignInScreen.routeName);
               }
             },
           ),
@@ -112,7 +129,7 @@ class _SignUpFormState extends State<SignUpForm> {
         if (value.isEmpty) {
           addError(error: kPassNullError);
           return "";
-        } else if (value.length < 8) {
+        } else if (value.length <= 8) {
           addError(error: kShortPassError);
           return "";
         }
@@ -158,6 +175,35 @@ class _SignUpFormState extends State<SignUpForm> {
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
         suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/Mail.svg"),
+      ),
+    );
+  }
+
+  TextFormField buildNameFormField() {
+    return TextFormField(
+      onSaved: (newValue) => name = newValue,
+      decoration: InputDecoration(
+        labelText: "Name",
+        hintText: "Enter your name",
+        // If  you are using latest version of flutter then lable text and hint text shown like this
+        // if you r using flutter less then 1.20.* then maybe this is not working properly
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
+      ),
+    );
+  }
+
+  TextFormField buildAgeFormField() {
+    return TextFormField(
+      onSaved: (newValue) => age = num.tryParse(newValue),
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: "Age",
+        hintText: "Enter your Age",
+        // If  you are using latest version of flutter then lable text and hint text shown like this
+        // if you r using flutter less then 1.20.* then maybe this is not working properly
+        floatingLabelBehavior: FloatingLabelBehavior.always,
+        suffixIcon: CustomSurffixIcon(svgIcon: "assets/icons/User.svg"),
       ),
     );
   }
