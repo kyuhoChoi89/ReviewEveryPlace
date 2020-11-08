@@ -3,6 +3,7 @@ import 'package:shop_app/components/custom_surfix_icon.dart';
 import 'package:shop_app/components/default_button.dart';
 import 'package:shop_app/components/form_error.dart';
 import 'package:shop_app/screens/sign_in/sign_in_screen.dart';
+import 'package:mysql1/mysql1.dart';
 
 import '../../../components/google_button.dart';
 import '../../../constants.dart';
@@ -47,18 +48,42 @@ class _SignUpFormState extends State<SignUpForm> {
           SizedBox(height: getProportionateScreenHeight(30)),
           buildPasswordFormField(),
           SizedBox(height: getProportionateScreenHeight(30)),
-          buildConformPassFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildNameFormField(),
-          SizedBox(height: getProportionateScreenHeight(30)),
-          buildAgeFormField(),
+          // buildConfirmPassFormField(),
+          // SizedBox(height: getProportionateScreenHeight(30)),
+          // buildNameFormField(),
+          // SizedBox(height: getProportionateScreenHeight(30)),
+          // buildAgeFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
           DefaultButton(
             text: "Sing Up",
-            press: () {
+            press: () async {
               if (_formKey.currentState.validate()) {
                 _formKey.currentState.save();
+                var settings = new ConnectionSettings(
+                    host: '10.0.2.2',
+                    port: 3306,
+                    user: 'root',
+                    password: 'root',
+                    db: 'mplace');
+                var conn = await MySqlConnection.connect(settings);
+                var results = await conn.query(
+                    'INSERT INTO users (login_id, password) VALUES (?, ?)',
+                    [email, password]);
+                print(results);
+
+                // // SERVER LOGIN API URL
+                // var url = 'https://example.com/signup_user.php';
+
+                // // Store all data with Param Name.
+                // var data = {'login_id': email, 'password': password};
+
+                // // Starting Web API Call.
+                // var response = await http.post(url, body: json.encode(data));
+
+                // // Getting Server response into variable.
+                // var message = jsonDecode(response.body);
+                // print(message);
                 // if all are valid then go to success screen
                 Navigator.pushNamed(context, SignInScreen.routeName);
               }
@@ -80,7 +105,7 @@ class _SignUpFormState extends State<SignUpForm> {
     );
   }
 
-  TextFormField buildConformPassFormField() {
+  TextFormField buildConfirmPassFormField() {
     return TextFormField(
       obscureText: true,
       onSaved: (newValue) => conform_password = newValue,
